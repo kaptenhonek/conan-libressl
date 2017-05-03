@@ -19,13 +19,13 @@ class LibreSSLConan(NxConanFile):
                 [
                     "vendor://openbsd/libressl/libressl-{v}.tar.gz".format(v=self.version),
                     "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-{v}.tar.gz".format(v=self.version)
-                ],
-                "libressl-{v}.tar.gz".format(v=self.version))
+                ], "{staging_dir}/src-libressl".format(staging_dir=self.staging_dir))
 
     def do_build(self):
         cmake = CMake(self)
+        cmake.build_dir = "{staging_dir}/src-libressl".format(staging_dir=self.staging_dir)
         cmake.configure(defs={
-                "CMAKE_INSTALL_PREFIX": self.package_folder,
+                "CMAKE_INSTALL_PREFIX": self.staging_dir,
                 "CMAKE_INSTALL_LIBDIR": "lib",
                 "BUILD_SHARED": "1" if self.options.shared else "0"
             }, source_dir="libressl-{v}".format(v=self.version))

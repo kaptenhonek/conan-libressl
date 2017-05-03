@@ -17,8 +17,9 @@ class SnappyTestConan(ConanFile):
         self.run("cmake --build . %s" % cmake.build_config)
 
     def imports(self):
-        self.copy("*.dll", "bin", "bin")
-        self.copy("*.dylib", "bin", "lib")
+        self.copy(pattern="*.dll"   , dst="bin", src="bin")
+        self.copy(pattern="*.dylib*", dst="bin", src="lib")
+        self.copy(pattern="*.so*"   , dst="lib", src="lib")
 
     def test(self):
         os.chdir("bin")
