@@ -1,12 +1,12 @@
-from nxtools import NxConanFile, retrieve
-from conans import CMake
+from nxtools import NxConanFile
+from conans import CMake, tools
 
 
 class LibreSSLConan(NxConanFile):
     name = "libressl"
     version = "2.5.3"
     license = "OpenBSD"
-    url = "https://www.libressl.org/"
+    url = "https://github.com/hoxnox/conan-libressl"
     license = "https://github.com/libressl/libressl/blob/master/src/LICENSE"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared":[True, False]}
@@ -15,15 +15,16 @@ class LibreSSLConan(NxConanFile):
     description = "LibreSSL is a version of the TLS/crypto stack forked from OpenSSL in 2014, with goals of modernizing the codebase, improving security, and applying best practice development processes."
 
     def do_source(self):
-        retrieve("14e34cc586ec4ce5763f76046dcf366c45104b2cc71d77b63be5505608e68a30",
+        self.retrieve("14e34cc586ec4ce5763f76046dcf366c45104b2cc71d77b63be5505608e68a30",
                 [
                     "vendor://openbsd/libressl/libressl-{v}.tar.gz".format(v=self.version),
                     "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-{v}.tar.gz".format(v=self.version)
-                ], "{staging_dir}/src-libressl".format(staging_dir=self.staging_dir))
+                ], "libressl-{v}.tar.gz".format(v=self.version))
 
     def do_build(self):
         cmake = CMake(self)
         cmake.build_dir = "{staging_dir}/src-libressl".format(staging_dir=self.staging_dir)
+        tools.untargz("libressl-{v}.tar.gz".format(v=self.version), cmake.build_dir)
         cmake.configure(defs={
                 "CMAKE_INSTALL_PREFIX": self.staging_dir,
                 "CMAKE_INSTALL_LIBDIR": "lib",
