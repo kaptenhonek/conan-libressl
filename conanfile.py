@@ -25,11 +25,11 @@ class LibreSSLConan(NxConanFile):
         cmake = CMake(self)
         cmake.build_dir = "{staging_dir}/src-libressl".format(staging_dir=self.staging_dir)
         tools.untargz("libressl-{v}.tar.gz".format(v=self.version), cmake.build_dir)
-        cmake.configure(defs={
-                "CMAKE_INSTALL_PREFIX": self.staging_dir,
-                "CMAKE_INSTALL_LIBDIR": "lib",
-                "BUILD_SHARED": "1" if self.options.shared else "0"
-            }, source_dir="libressl-{v}".format(v=self.version))
+        cmake_defs = {"CMAKE_INSTALL_PREFIX": self.staging_dir,
+                      "CMAKE_INSTALL_LIBDIR": "lib",
+                      "BUILD_SHARED": "1" if self.options.shared else "0"}
+        cmake_defs.update(self.cmake_crt_linking_flags())
+        cmake.configure(defs=cmake_defs, source_dir="libressl-{v}".format(v=self.version))
         cmake.build(target="install")
 
     def do_package_info(self):
