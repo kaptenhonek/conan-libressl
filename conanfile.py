@@ -1,6 +1,5 @@
 from nxtools import NxConanFile
 from conans import CMake, tools
-from shutil import copytree
 from glob import glob
 
 
@@ -33,7 +32,7 @@ class LibreSSLConan(NxConanFile):
             tools.patch(base_path=src_dir, patch_file=file, strip=0)
         cmake_defs = {"CMAKE_INSTALL_PREFIX": self.staging_dir,
                       "CMAKE_INSTALL_LIBDIR": "lib",
-                      "BUILD_SHARED": "1" if self.options.shared else "0"}
+                      "BUILD_SHARED": "1" if self.options["libressl"].shared else "0"}
         cmake_defs.update(self.cmake_crt_linking_flags())
         cmake.configure(defs=cmake_defs, source_dir=src_dir)
         cmake.build(target="install")
@@ -41,14 +40,14 @@ class LibreSSLConan(NxConanFile):
     def do_package_info(self):
         if self.settings.compiler == "Visual Studio":
             self.cpp_info.libs = [
-                    "tls-shared" if self.options.shared else "tls.lib",
-                    "ssl-shared" if self.options.shared else "ssl.lib",
-                    "crypto-shared" if self.options.shared else "crypto.lib"
+                    "tls-shared" if self.options["libressl"].shared else "tls.lib",
+                    "ssl-shared" if self.options["libressl"].shared else "ssl.lib",
+                    "crypto-shared" if self.options["libressl"].shared else "crypto.lib"
                 ]
         else:
             self.cpp_info.libs = [
-                    "tls.so" if self.options.shared else "tls.a",
-                    "ssl.so" if self.options.shared else "ssl.a",
-                    "crypto.so" if self.options.shared else "crypto.a"
+                    "tls.so" if self.options["libressl"].shared else "tls.a",
+                    "ssl.so" if self.options["libressl"].shared else "ssl.a",
+                    "crypto.so" if self.options["libressl"].shared else "crypto.a"
                 ]
 
