@@ -1,0 +1,18 @@
+--- CMakeLists.txt	2017-03-17 04:52:26.000000000 +0300
++++ CMakeLists.txt	2017-09-26 15:09:50.274942702 +0300
+@@ -300,15 +300,8 @@
+ 
+ add_subdirectory(crypto)
+ add_subdirectory(ssl)
+-add_subdirectory(apps)
+ add_subdirectory(tls)
+ add_subdirectory(include)
+-if(NOT MSVC)
+-	add_subdirectory(man)
+-endif()
+-if(NOT MSVC OR ENABLE_VSTEST)
+-	add_subdirectory(tests)
+-endif()
+ 
+ configure_file(
+ 	"${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
