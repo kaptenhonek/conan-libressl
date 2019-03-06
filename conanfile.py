@@ -56,4 +56,4 @@ endif()''',
         self.copy(pattern="*.dylib", dst="lib", keep_path=False, src="install")
 
     def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
+        self.cpp_info.libs = ["tls", "ssl", "crypto"]
